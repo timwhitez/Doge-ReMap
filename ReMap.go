@@ -46,13 +46,13 @@ func main(){
 	syscall.Syscall9(uintptr(NtCreateSection_ptr),7, uintptr(unsafe.Pointer(&handleNtdllSection)),uintptr(0x000F0000|0x4|0x1),0,0,syscall.PAGE_READONLY,uintptr(0x1000000),hNtdllfile,0,0)
 
 
-	//ntmapviewofsection = 7f346ebbd5dd0f0c2fc1f4a78f62615a64cab09a
-	NtMapViewOfSection_ptr,_,_ := gabh.GetFuncPtr("ntdll.dll","7f346ebbd5dd0f0c2fc1f4a78f62615a64cab09a",str2sha1)
+	//zwmapviewofsection = da39da04447a22b747ac8e86b4773bbd6ea96f9b
+	ZwMapViewOfSection_ptr,_,_ := gabh.GetFuncPtr("ntdll.dll","da39da04447a22b747ac8e86b4773bbd6ea96f9b",str2sha1)
 
 	var unhookedNtdllBaseAddress uintptr
 	var size uintptr
 	//status = NtMapViewOfSection(handleNtdllSection, NtCurrentProcess(), &unhookedNtdllBaseAddress, 0, 0, 0, &size, ViewShare, 0, PAGE_READONLY);
-	syscall.Syscall12(uintptr(NtMapViewOfSection_ptr),10,handleNtdllSection,uintptr(0xffffffffffffffff),uintptr(unsafe.Pointer(&unhookedNtdllBaseAddress)),0,0,0,uintptr(unsafe.Pointer(&size)),1,0,syscall.PAGE_READONLY,0,0)
+	syscall.Syscall12(uintptr(ZwMapViewOfSection_ptr),10,handleNtdllSection,uintptr(0xffffffffffffffff),uintptr(unsafe.Pointer(&unhookedNtdllBaseAddress)),0,0,0,uintptr(unsafe.Pointer(&size)),1,0,syscall.PAGE_READONLY,0,0)
 
 	NtDelayExecution_ptr,expname,e := GetFuncPtrR(unhookedNtdllBaseAddress,int(size),"NtDelayExecution")
 	if e != nil{
